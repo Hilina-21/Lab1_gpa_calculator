@@ -1,7 +1,7 @@
-from students.StudentService import StudentService
-from courses.CourseService import CourseService
-from results.ResultService import ResultService
-from gradereports.GradeReport import GradeReport
+from students.StudentService import manage_students
+from courses.CourseService import manage_courses
+from results.ResultService import manage_results
+from gradereports.GradeReport import generate_report
 
 students = {}
 courses = {}
@@ -20,16 +20,16 @@ while True:
     choice = menu()
 
     if choice == "1":
-        StudentService.manage_students(students)
+        manage_students(students)
 
     elif choice == "2":
-        CourseService.manage_courses(courses)
+        manage_courses(courses)
 
     elif choice == "3":
-        ResultService.manage_results(students, courses, results)
+        manage_results(students, courses, results)
 
     elif choice == "4":
-        GradeReport.generate_report(students, courses, results)
+        generate_report(students, courses, results)
 
     elif choice == "5":
         print("Exiting program...")

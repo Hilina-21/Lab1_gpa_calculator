@@ -1,32 +1,72 @@
-class CourseService:
+FILE_NAME = "courses.txt"
 
-    @staticmethod
-    def manage_courses(courses):
-        print("\n--- COURSE MANAGEMENT ---")
-        print("1. Register Course")
-        print("2. List Courses")
-        option = input("Enter choice: ")
+def load_courses():
+    courses = {}
+    file = open(FILE_NAME, "r")
 
-        if option == "1":
-            CourseService.register_course(courses)
-        elif option == "2":
-            CourseService.list_courses(courses)
-        else:
-            print("Invalid choice.")
-
-    @staticmethod
-    def register_course(courses):
-        cid = input("Enter Course Code: ")
-        title = input("Enter Course Title: ")
-        credit = int(input("Enter Course Credit: "))
+    for line in file:
+        cid, title, credit = line.strip().split(",")
         courses[cid] = {"title": title, "credit": credit}
-        print("Course registered successfully.")
 
-    @staticmethod
-    def list_courses(courses):
-        if not courses:
-            print("No courses registered.")
-        else:
-            print("\nRegistered Courses:")
-            for cid, info in courses.items():
-                print(f"  course-id={cid} -  title={info['title']} (  credit={info['credit']} hr)")
+    file.close()
+    return courses
+
+def save_courses(courses):
+    file = open(FILE_NAME, "w")
+
+    for cid, info in courses.items():
+        file.write(f"{cid},{info['title']},{info['credit']}\n")
+
+    file.close()
+    print("✔ Courses saved to file.")
+
+def manage_courses(courses):
+    print("\n--- COURSE MANAGEMENT ---")
+    print("1. Register Course")
+    print("2. List Courses")
+    print("3. Exit")
+    option = input("Enter choice: ")
+
+    if option == "1":
+        register_course(courses)
+        save_courses(courses)
+    elif option == "2":
+        list_courses(courses)
+    elif option == "3":
+        save_courses(courses)
+        print("Exiting course menu...")
+        exit()
+    else:
+        print("Invalid choice.")
+
+
+def register_course(courses):
+    cid = input("Enter Course Code: ")
+
+    if cid in courses:
+        print("Error: Course already exists!")
+        return
+
+    title = input("Enter Course Title: ")
+    credit = input("Enter Course Credit: ")
+
+    if not credit.isdigit():
+        print("Error: Credit must be a number!")
+        return
+
+    courses[cid] = {
+        "title": title,
+        "credit": credit
+    }
+
+    print("✔ Course registered successfully.")
+
+def list_courses(courses):
+    if len(courses) == 0:
+        print("No courses registered.")
+    else:
+        print("\nRegistered Courses:")
+        for cid, info in courses.items():
+            print(
+                f"  course-id={cid} - title={info['title']} (credit={info['credit']} hr)"
+            )
